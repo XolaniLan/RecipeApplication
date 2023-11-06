@@ -21,7 +21,7 @@ const /** {NodeList} */ $tabPanels = document.querySelectorAll("[data-tab-panel]
 let /** {NodeElement} */[$lastActiveTabPanel] = $tabPanels;
 let /** {NodeElement} */[$lastActiveTabBtn] = $tabBtns;
 
-addEventOnElements($tabBtns, "click", function () {
+addEventListener($tabBtns, "click", function () {
   $lastActiveTabPanel.setAttribute("hidden", "");
   $lastActiveTabBtn.setAttribute("aria-selected", false);
   $lastActiveTabBtn.setAttribute("tabindex", -1);
@@ -35,3 +35,23 @@ addEventOnElements($tabBtns, "click", function () {
   $lastActiveTabBtn = this;
 });
 
+// Navigate Tab with arrow
+
+addEventListener($tabBtns, "keydown", function (e) {
+  const /** {NodeElement} */ $nextElement = this.nextElementSibling;
+  const /** {NodeElement} */ $previousElement = this.previousElementSibling;
+
+  if (e.key === "ArrowRight" && $nextElement) {
+    this.setAttribute("tabindex", -1);
+    $nextElement.setAttribute("tabindex", 0);
+    $nextElement.focus();
+  } else if (e.key === "ArrowLeft" && $previousElement) {
+    this.setAttribute("tabindex", -1);
+    $previousElement.setAttribute("tabindex", 0);
+    $previousElement.focus();
+  } else if (e.key === "Tab") {
+    this.setAttribute("tabindex", -1);
+    $lastActiveTabBtn.setAttribute("tabindex", 0);
+  }
+
+})
