@@ -2,4 +2,4 @@
 RecipeApplication
 
 Incomplete Source
-Dark Mode Implemented
+Hero and Slider Implemented
