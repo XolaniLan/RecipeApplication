@@ -1,7 +1,13 @@
 "use strict";
 
-// home page search
+/**
+ * Import
+ */
+import { fetchData } from "./api.js";
+import { $skeletonCard, cardQueries } from "./global.js";
+import { getTime } from "./module.js";
 
+// home page search
 const /** {NodeElement} */ $searchField = document.querySelector("[data-search-field]");
 const /** {NodeElement} */ $searchBtn = document.querySelector("[data-search-btn]");
 
@@ -33,6 +39,8 @@ addEventListener($tabBtns, "click", function () {
 
   $lastActiveTabPanel = $currentTabPanel;
   $lastActiveTabBtn = this;
+
+  addTabContent(this, $currentTabPanel);
 });
 
 // Navigate Tab with arrow
@@ -53,5 +61,88 @@ addEventListener($tabBtns, "keydown", function (e) {
     this.setAttribute("tabindex", -1);
     $lastActiveTabBtn.setAttribute("tabindex", 0);
   }
+});
 
-})
+/**
+ * Working with API, fetching data for Tab Content.
+ */
+
+const addTabContent = ($currentTabBtn, $currentTabPanel) => {
+  const /** {NodeElement} */ $gridList = document.createElement("div");
+  $gridList.classList.add("grid-list");
+
+  $currentTabPanel.innerHTML = `
+    <div class="grid-list">
+      ${$skeletonCard.repeat(12)}
+    </div>
+  `;
+
+  fetchData([['mealType', $currentTabBtn.textContent.trim().toLowerCase()], ...cardQueries], function (data) {
+
+    $currentTabPanel.innerHTML = "";
+
+    for (let i = 0; i < 12; i++) {
+      const {
+        recipe: {
+          image,
+          label: title,
+          totalTime: cookingTime,
+          uri
+        }
+      } = data.hits[i];
+
+      const /** {String} */ recipeId = uri.slice(uri.lastIndexOf("_") + 1);
+
+      const /** {NodeElement} */ $card = document.createElement("div");
+      $card.classList.add("card");
+      $card.style.animationDelay = `${100 * i}ms`;
+
+      $card.innerHTML = `
+      <figure class="card-media img-holder">
+        <img src="${image}"
+            width="195" height="195" loading="lazy"
+            alt="${title}" class="img-cover"
+        />
+      </figure>
+
+      <div class="card-body">
+        <h3 class="title-small">
+          <a href="./detail.html?recipe=${recipeId}" class="card-link">
+            ${title ?? "Untitled"}
+          </a>
+        </h3>
+
+        <div class="meta-wrapper">
+
+          <div class="meta-item">
+            <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+
+            <span class="label-medium">${getTime(cookingTime).time || "<1"} ${getTime(cookingTime).timeUnit}</span>
+          </div>
+
+          <button class="icon-btn has-state removed" aria-label="Add to saved recipes">
+            <span class="material-symbols-outlined bookmark-add" aria-hidden="true">bookmark_add</span>
+
+            <span class="material-symbols-outlined bookmark" aria-hidden="true">bookmark</span>
+          </button>
+      </div>
+
+    </div>
+      `;
+
+      $gridList.appendChild($card);
+    }
+
+    $currentTabPanel.appendChild($gridList);
+
+    $currentTabPanel.innerHTML += `
+      <a href="./recipes.html?mealType=${$currentTabBtn.textContent.trim().toLowerCase()}" class="btn btn-secondary label-large has-state">
+         Show more
+      </a>
+    `;
+  });
+}
+
+addTabContent($lastActiveTabBtn, $lastActiveTabPanel);
+
+
