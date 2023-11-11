@@ -92,6 +92,7 @@ const addTabContent = ($currentTabBtn, $currentTabPanel) => {
       } = data.hits[i];
 
       const /** {String} */ recipeId = uri.slice(uri.lastIndexOf("_") + 1);
+      const /** {undefined || String} */ isSaved = window.localStorage.getItem(`cookio-recipe${recipeId}`);
 
       const /** {NodeElement} */ $card = document.createElement("div");
       $card.classList.add("card");
@@ -99,35 +100,35 @@ const addTabContent = ($currentTabBtn, $currentTabPanel) => {
 
       $card.innerHTML = `
       <figure class="card-media img-holder">
-        <img src="${image}"
-            width="195" height="195" loading="lazy"
-            alt="${title}" class="img-cover"
-        />
-      </figure>
+      <img src="${image}"
+          width="195" height="195" loading="lazy"
+          alt="${title}" class="img-cover"
+      />
+    </figure>
 
-      <div class="card-body">
-        <h3 class="title-small">
-          <a href="./detail.html?recipe=${recipeId}" class="card-link">
-            ${title ?? "Untitled"}
-          </a>
-        </h3>
+    <div class="card-body">
+      <h3 class="title-small">
+        <a href="./detail.html?recipe=${recipeId}" class="card-link">
+          ${title ?? "Untitled"}
+        </a>
+      </h3>
 
-        <div class="meta-wrapper">
+      <div class="meta-wrapper">
 
-          <div class="meta-item">
-            <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+        <div class="meta-item">
+          <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
 
-            <span class="label-medium">${getTime(cookingTime).time || "<1"} ${getTime(cookingTime).timeUnit}</span>
-          </div>
+          <span class="label-medium">${getTime(cookingTime).time || "<1"} ${getTime(cookingTime).timeUnit}</span>
+        </div>
 
-          <button class="icon-btn has-state removed" aria-label="Add to saved recipes">
-            <span class="material-symbols-outlined bookmark-add" aria-hidden="true">bookmark_add</span>
+        <button class="icon-btn has-state ${isSaved ? "saved" : "removed"}" aria-label="Add to saved recipes" onclick="saveRecipe (this, '${recipeId}')">
+          <span class="material-symbols-outlined bookmark-add" aria-hidden="true">bookmark_add</span>
 
-            <span class="material-symbols-outlined bookmark" aria-hidden="true">bookmark</span>
-          </button>
-      </div>
-
+          <span class="material-symbols-outlined bookmark" aria-hidden="true">bookmark</span>
+        </button>
     </div>
+
+  </div>
       `;
 
       $gridList.appendChild($card);
@@ -144,5 +145,102 @@ const addTabContent = ($currentTabBtn, $currentTabPanel) => {
 }
 
 addTabContent($lastActiveTabBtn, $lastActiveTabPanel);
+
+/**
+ * Fetch Data For Slider Card
+ */
+
+let /** {Array} */ cuisineType = ["Asian", "French"];
+
+const /** {NodeList} */ $sliderSections = document.querySelectorAll("[data-slider-section");
+
+for (const [index, $sliderSection] of $sliderSections.entries()) {
+  $sliderSection.innerHTML = `
+    <div class="container">
+      <h2 class="section-title headline-small" id="slider-label-1">
+        Latest ${cuisineType[index]}
+      </h2>
+
+      <div class="slider">
+          <ul class="slider-wrapper" data-slider-wrapper>
+          ${`<li class="slider-item">${$skeletonCard}</li>`.repeat(10)}
+          </ul>
+      </div>
+    </div>
+  `;
+
+  const /** {NodeElement} */ $sliderWrapper = $sliderSection.querySelector("[data-slider-wrapper]");
+
+  fetchData([...cardQueries, ["cuisineType", cuisineType[index]]], function (data) {
+
+    $sliderWrapper.innerHTML = "";
+
+    data.hits.map(item => {
+
+      const {
+        recipe: {
+          image,
+          label: title,
+          totalTime: cookingTime,
+          uri
+        }
+      } = item;
+
+      const /** {String} */ recipeId = uri.slice(uri.lastIndexOf("_") + 1);
+      const /** {undefined || String} */ isSaved = window.localStorage.getItem(`cookio-recipe${recipeId}`);
+
+      const /** {NodeElement} */ $sliderItem = document.createElement("li");
+      $sliderItem.classList.add("slider-item");
+
+      $sliderItem.innerHTML = `
+        <div class="card">
+                <figure class="card-media img-holder">
+                <img src="${image}"
+                    width="195" height="195" loading="lazy"
+                    alt="${title}" class="img-cover"
+                />
+              </figure>
+
+              <div class="card-body">
+                <h3 class="title-small">
+                  <a href="./detail.html?recipe=${recipeId}" class="card-link">
+                    ${title ?? "Untitled"}
+                  </a>
+                </h3>
+
+                <div class="meta-wrapper">
+
+                  <div class="meta-item">
+                    <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+
+                    <span class="label-medium">${getTime(cookingTime).time || "<1"} ${getTime(cookingTime).timeUnit}</span>
+                  </div>
+
+                  <button class="icon-btn has-state ${isSaved ? "saved" : "removed"}" aria-label="Add to saved recipes" onclick="saveRecipe (this, '${recipeId}')">
+                    <span class="material-symbols-outlined bookmark-add" aria-hidden="true">bookmark_add</span>
+
+                    <span class="material-symbols-outlined bookmark" aria-hidden="true">bookmark</span>
+                  </button>
+              </div>
+
+            </div>
+        </div>
+            
+      `;
+
+      $sliderWrapper.appendChild($sliderItem);
+    });
+
+    $sliderWrapper.innerHTML += `
+      <li class="slider-item" data-slider-item>
+        <a href="./recipes.html?cuisineType=${cuisineType[index].toLowerCase()}" class="load-more-card has-state">
+          <span class="label-large">Show more</span>
+
+          <span class="material-symbols-outlined" aria-hidden="true">navigate_next</span>
+        </a>
+      </li>        
+    `;
+  });
+}
 
 

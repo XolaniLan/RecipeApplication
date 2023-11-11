@@ -412,7 +412,7 @@ value = pork-free
 Red Meat Free
 value = red-meat-free
 
-Sesame Free
+  Sesame Free
 value = sesame-free
 
 Shellfish-Free

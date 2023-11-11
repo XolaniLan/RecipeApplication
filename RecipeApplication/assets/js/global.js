@@ -1,4 +1,7 @@
 "use strict";
+
+import { fetchData } from "./api.js";
+
 /**
  * Add event on multiple elements
  * @param {NodeList} $elements NodeList
@@ -38,7 +41,32 @@ const /** {String} */ ROOT = "https://api.edamam.com/api/recipes/v2";
 window.saveRecipe = function (element, recipeId) {
   const /** {String} */ isSaved = window.localStorage.getItem(`cookio-recipe${recipeId}`);
   ACCESS_POINT = `${ROOT}/${recipeId}`;
+
+  if (!isSaved) {
+    fetchData(cardQueries, function (data) {
+      window.localStorage.setItem(`cookio-recipe${recipeId}`, JSON.stringify(data));
+      element.classList.toggle("saved");
+      element.classList.toggle("removed");
+      showNotification("Added to Recipe book");
+    });
+    ACCESS_POINT = ROOT;
+  } else {
+    window.localStorage.removeItem(`cookio-recipe${recipeId}`);
+    element.classList.toggle("saved");
+    element.classList.toggle("removed");
+    showNotification("Removed from Recipe book");
+  }
 }
 
+const /** {NodeElement} */ $snackbarContainer = document.createElement("div");
+$snackbarContainer.classList.add("snackbar-container");
+document.body.appendChild($snackbarContainer);
 
+function showNotification(message) {
+  const /** {NodeElement} */ $snackbar = document.createElement("div");
+  $snackbar.classList.add("snackbar");
+  $snackbar.innerHTML = `<p class="body-medium">${message}</p>`;
+  $snackbarContainer.appendChild($snackbar);
+  $snackbar.addEventListener("animationend", e => $snackbarContainer.removeChild($snackbar));
+}
 
