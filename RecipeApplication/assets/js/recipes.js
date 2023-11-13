@@ -56,7 +56,7 @@ $filterSubmit.addEventListener("click", function () {
       queries.push([key, $checkbox.value]);
     }
   }
-  window.location = queries.length ? `?${queries.joinj("&").replace(/,/g, "=")}` : "/recipes.html";
+  window.location = queries.length ? `?${queries.join("&").replace(/,/g, "=")}` : "/recipes.html";
 });
 
 $filterSearch.addEventListener("keydown", e => {
@@ -87,4 +87,24 @@ queryStr && queryStr.split("&").map(i => {
   } else {
     $filterBar.querySelector(`[value="${i.split("=")[1].replace(/%20/g, " ")}"]`).checked = true;
   }
-})
+});
+
+const /** {NodeElement} */ $filterBtn = document.querySelector("[data-filter-btn]");
+
+window.addEventListener("scroll", e => {
+  $filterBtn.classList[window.scrollY >= 120 ? "add" : "remove"]("active");
+});
+
+// Request recipes and render
+// const /** {NodeElement} */ $gridList = document.querySelector("[data-grid-list]");
+// const /** {NodeElement} */ $loadMore = document.querySelector("[data-load-more]");
+// const /** {Array} */ defaultQueries = [
+//   ["mealType", "breakfast"],
+//   ["mealType", "dinner"],
+//   ["mealType", "lunch"],
+//   ["mealType", "snack"],
+//   ["mealType", "teatime"],
+//   ...cardQueries
+// ];
+
+// $gridList.innerHTML = $skeletonCard.repeat(20);
