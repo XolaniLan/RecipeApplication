@@ -9,9 +9,19 @@ import { fetchData } from "./api.js";
  * @param {Function} callback Callback function
  */
 
+// window.addEventListener = ($elements, eventType, callback) => {
+//   for (const $element of $elements) {
+//     $element.addEventListener(eventType, callback);
+//   }
+// }
+
 window.addEventListener = ($elements, eventType, callback) => {
   for (const $element of $elements) {
-    $element.addEventListener(eventType, callback);
+    if ($element instanceof Element) {
+      $element.addEventListener(eventType, callback);
+    } else {
+      console.error('Invalid DOM element:', $element);
+    }
   }
 }
 

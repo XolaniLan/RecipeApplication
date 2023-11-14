@@ -1,7 +1,14 @@
+"use strict";
+
 /**
- * @license MIT
- * @copyright 2023 codewithsadee
- * @author codewithsadee <mohammadsadee24@gmail.com>
+ * Import
  */
 
-"use strict";
+import { fetchData } from "./api.js"
+import { getTime } from "./module.js"
+
+/**
+ * Render data
+ */
+
+const /** {NodeElement} */ $detailContainer = document.querySelector("[data-detail-container]");
