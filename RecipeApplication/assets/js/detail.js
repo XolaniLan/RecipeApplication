@@ -31,7 +31,7 @@ fetchData(null, data => {
     uri
   } = data.recipe;
 
-  document.title = `${title} - Cook.io`;
+  document.title = `${title} - Recipo`;
 
   const /** {Object} */ banner = LARGE ?? REGULAR ?? SMALL ?? THUMBNAIL;
   const { url: bannerUrl, width, height } = banner;

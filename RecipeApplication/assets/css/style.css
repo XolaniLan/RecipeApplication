@@ -6,15 +6,14 @@
 
 :root {
   /* Colors */
-  --white: hsl(0, 0%, 100%);
   --overlay-bg: hsla(0, 3%, 13%, 0.5);
 
   /* Light Colors */
-  --light-background: hsl(0, 0%, 96%);
+  --light-background: hsl(29, 36%, 67%);
   --light-on-background: hsl(0, 3%, 13%);
   --light-on-background-variant: hsl(20, 3%, 19%);
-  --light-primary: hsl(11, 87%, 59%);
-  --light-primary-hover: hsl(11, 60%, 50%);
+  --light-primary: hsl(32, 32%, 91%);
+  --light-primary-hover: hsl(43, 23%, 26%);;
   --light-primary-container: hsl(14, 57%, 95%);
   --light-error: hsl(1, 73%, 42%);
   --light-active-indicator: hsl(12, 58%, 88%);
@@ -31,8 +30,8 @@
   --dark-background: hsl(0, 0%, 10%);
   --dark-on-background: hsl(11, 3%, 87%);
   --dark-on-background-variant: hsl(11, 3%, 81%);
-  --dark-primary: hsl(11, 87%, 64%);
-  --dark-primary-hover: hsl(11, 51%, 51%);
+  --dark-primary: hsl(32, 32%, 91%);
+  --dark-primary-hover: hsl(43, 23%, 26%);
   --dark-primary-container: hsl(15, 3%, 15%);
   --dark-error: hsl(1, 69%, 59%);
   --dark-active-indicator: hsl(15, 25%, 22%);
@@ -574,7 +573,7 @@ main {
 /* primary button */
 .btn-primary {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--overlay-bg);
 }
 
 .btn-primary:where(:hover, :focus-visible):not(:active) {
@@ -900,6 +899,10 @@ main {
 
 .search-submit:where(:hover, :focus-visible):not(:active) {
   background-color: var(--primary-hover);
+}
+
+.banner_phrase {
+  color: #2f1f19;
 }
 
 /***
