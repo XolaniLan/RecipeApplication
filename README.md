@@ -13,7 +13,7 @@ This Recipe Application is a web-based platform developed using HTML, CSS, JavaS
 
 ## Setup
 
-1. **Clone Repository**: `git clone [repository_url]`
+1. **Clone Repository**: `git clone [https://github.com/XolaniLan/Recipo-Application.git]`
 2. **Navigate to Directory**: `cd recipe-application`
 3. **Open index.html in a Browser**
 
