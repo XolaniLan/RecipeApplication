@@ -44,5 +44,8 @@ This Recipe Application is a web-based platform developed using HTML, CSS, JavaS
 - Login and Registration
 - Buy Recipes
 
+## Contributors
+- Xolani Lan Shongwe
+  
 ## Live Preview
 https://recipo-application.vercel.app/
